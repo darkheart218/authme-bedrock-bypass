@@ -54,11 +54,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- AuthMe API (untuk force login) -->
+        <!-- AuthMe API (untuk force login). Pakai versi stabil 5.6.0 (bukan beta),
+             dan groupId/artifactId huruf kecil sesuai cara Jitpack membangun repo AuthMe/AuthMeReloaded. -->
         <dependency>
-            <groupId>com.github.AuthMe</groupId>
-            <artifactId>AuthMeReloaded</artifactId>
-            <version>5.6.0-Beta2</version>
+            <groupId>com.github.authme</groupId>
+            <artifactId>authmereloaded</artifactId>
+            <version>5.6.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
