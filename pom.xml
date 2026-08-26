@@ -30,10 +30,10 @@
             <id>opencollab-snapshot</id>
             <url>https://repo.opencollab.dev/main/</url>
         </repository>
-        <!-- Repo untuk AuthMe -->
+        <!-- Repo RESMI AuthMe (bukan Jitpack lagi -- AuthMe versi baru punya server Maven sendiri) -->
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -54,12 +54,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- AuthMe API (untuk force login). Pakai versi stabil 5.6.0 (bukan beta),
-             dan groupId/artifactId huruf kecil sesuai cara Jitpack membangun repo AuthMe/AuthMeReloaded. -->
+        <!-- AuthMe API (untuk force login). AuthMe versi baru (6.x) pakai nama package
+             fr.xephi:authme-core, didownload dari repo resmi codemc (bukan Jitpack lagi). -->
         <dependency>
-            <groupId>com.github.authme</groupId>
-            <artifactId>authmereloaded</artifactId>
-            <version>5.6.0</version>
+            <groupId>fr.xephi</groupId>
+            <artifactId>authme-core</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
