@@ -1,0 +1,8 @@
+name: AuthMeBedrockBypass
+version: '1.0.0'
+main: com.example.authmebedrockbypass.AuthMeBedrockBypass
+api-version: '1.20'
+author: YourName
+description: Auto-login player Bedrock (Geyser/Floodgate) sehingga tidak perlu login AuthMe manual
+
+depend: [AuthMe, floodgate]
