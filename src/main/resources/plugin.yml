@@ -10,7 +10,7 @@ description: >
     melihat animasi mod Emotecraft secara asli.
   - Pemain Bedrock diberi command /emotewheel yang membuka form berisi daftar
     emote, tinggal klik untuk menjalankan /emotes play <nama> versi mereka sendiri.
-depend: [Floodgate]
+depend: [floodgate]
 softdepend: [Emotecraft]
 commands:
   emotewheel:
