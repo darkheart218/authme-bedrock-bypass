@@ -1,39 +1,42 @@
-name: Build Plugin
+name: Build EmoteBridge
 
+# Build otomatis setiap ada push/PR ke branch main, dan bisa juga dijalankan manual
+# lewat tab "Actions" di GitHub (tombol "Run workflow").
 on:
   push:
+    branches: [ "main" ]
+  pull_request:
     branches: [ "main" ]
   workflow_dispatch: {}
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout kode
         uses: actions/checkout@v4
 
-      # Build cuma sekali pakai JDK 21. Karena pom.xml sudah di-set
-      # maven.compiler.release=17, hasil .jar-nya TETAP jalan di Java 17, 21, maupun 26.
-      # Tidak perlu build 3x untuk 3 versi Java.
-      - name: Setup Java 21 (dipakai buat proses build)
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
-          cache: 'maven'
+          java-version: '17'
 
-      - name: Build dengan Maven
-        run: mvn -B clean package
+      # Tidak perlu commit gradlew/gradle-wrapper - action ini yang
+      # menyediakan Gradle-nya, sekaligus cache dependency biar build berikutnya cepat.
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
 
-      # Sanity check: mastiin bytecode hasil compile beneran level Java 17 (class version 61),
-      # bukan kebawa ikut versi JDK build (21). Kalau ini gagal, cek maven.compiler.release di pom.xml.
-      - name: Cek versi bytecode hasil compile
-        run: |
-          CLASS_FILE=$(find target/classes -name "*.class" | head -n 1)
-          javap -verbose "$CLASS_FILE" | grep "major version"
+      - name: Build jar
+        run: gradle build
 
-      - name: Upload hasil .jar
+      # Hasil jar bisa diunduh dari halaman run workflow ini,
+      # di bagian "Artifacts" (tersedia beberapa hari, bukan release permanen).
+      - name: Upload hasil build
         uses: actions/upload-artifact@v4
         with:
-          name: AuthMeBedrockBypass-jar
-          path: target/*.jar
+          name: EmoteBridge-jar
+          path: build/libs/*.jar
