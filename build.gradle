@@ -8,13 +8,13 @@ version = '1.0.0'
 repositories {
     mavenCentral()
     maven { url = 'https://repo.papermc.io/repository/maven-public/' }
-    maven { url = 'https://repo.opencollective.com/repository/maven-public/' } // contoh, cek repo resmi Geyser/Floodgate terbaru
+    // Repo resmi Geyser/Floodgate (bukan repo.opencollective.com - itu keliru)
+    maven { url = 'https://repo.opencollab.dev/main/' }
 }
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
-    // Ganti dengan koordinat Maven Floodgate API versi terbaru sesuai
-    // https://github.com/GeyserMC/Floodgate (cek README repo untuk repo & versi resmi)
+    // Sumber: https://wiki.geysermc.org/geyser/getting-started-with-the-api
     compileOnly 'org.geysermc.floodgate:api:2.2.2-SNAPSHOT'
 }
 
