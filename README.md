@@ -1,54 +1,44 @@
-# AuthMeBedrockBypass
+# EmoteBridge — jembatan Emotecraft ⇄ Bedrock
 
-Plugin Spigot/Paper sederhana: player yang join lewat **Bedrock (Geyser)** otomatis
-di-*force login* di **AuthMe**, sehingga tidak perlu ketik `/login` atau `/register` manual.
-Player Java biasa tetap wajib login seperti normal.
+## Apa yang plugin ini BISA lakukan
+1. **Bedrock melihat "indikator" saat Java ber-emote**: saat pemain Java menjalankan
+   `/emotes play <nama>` (dari Emotecraft-Bukkit), semua pemain Bedrock di radius
+   tertentu di sekitarnya mendapat particle + suara + actionbar. Ini BUKAN animasi
+   3D asli Emotecraft — cuma tanda visual bahwa ada emote terjadi.
+2. **Bedrock memakai emote**: pemain Bedrock sebenarnya sudah bisa mengetik
+   `/emotes play <nama>` langsung dari chat mereka tanpa plugin tambahan apa pun
+   (Geyser meneruskan command teks apa adanya). Plugin ini menambah command
+   `/emotewheel` sebagai menu praktis di HP.
 
-## Arsitektur yang dibutuhkan
+## Apa yang TIDAK bisa dilakukan (dan kenapa)
+Animasi 3D asli dari Emotecraft dirender oleh mod client Java itu sendiri.
+Client Bedrock tidak menjalankan mod Java sama sekali, dan Geyser hanya
+menerjemahkan protokol vanilla Minecraft — bukan channel plugin custom milik
+mod pihak ketiga. Supaya Bedrock benar-benar melihat gerakan yang mirip,
+satu-satunya jalan adalah membuat ulang animasi tersebut dalam format emote
+Bedrock (model + animation controller sesuai skeleton pemain Bedrock), lalu
+mendistribusikannya sebagai resource+behavior pack lewat Geyser. Itu pekerjaan
+seni/asset per-emote yang terpisah dari kode, dan di luar cakupan plugin ini.
 
-```
-Player Bedrock -> Geyser (bisa standalone atau plugin di Bungee) -> Floodgate -> BungeeCord -> Server Lobby (Spigot/Paper)
-                                                                                                  ├─ AuthMe
-                                                                                                  ├─ Floodgate (plugin, WAJIB juga di server ini)
-                                                                                                  └─ AuthMeBedrockBypass (plugin ini)
-```
+## Yang WAJIB kamu verifikasi/sesuaikan sebelum pakai
+- [ ] **Nama command Emotecraft-Bukkit**: cek dengan `/help emotes` di server-mu,
+      pastikan memang `/emotes play <nama>` (kalau beda, ubah prefix di
+      `EmoteBridgePlugin.onCommand`).
+- [ ] **Nama-nama emote di `config.yml`**: isi sesuai file emote yang benar-benar
+      sudah kamu taruh di folder emote server.
+- [ ] **Versi Floodgate API**: import `FloodgateApi` & form Cumulus di kode ini
+      pakai kerangka umum — nama class/package form bisa berbeda tergantung
+      versi Floodgate kamu. Cek https://github.com/GeyserMC/Floodgate untuk
+      contoh terbaru dan sesuaikan bagian `openEmoteForm()`.
+- [ ] **Koordinat Maven di `build.gradle`**: repo & versi Floodgate di file ini
+      cuma contoh, cek repo resmi untuk versi yang benar-benar tersedia.
+- [ ] Plugin ini belum pernah dikompilasi/diuji terhadap server sungguhan
+      (lingkungan saya tidak punya akses internet untuk mengunduh dependency
+      dan menjalankan build). Anggap ini kerangka awal yang solid, bukan
+      produk jadi — compile & test dulu di server test sebelum dipakai live.
 
-Poin penting:
-- Floodgate **harus** terpasang di proxy **dan** di setiap server backend yang mau
-  membaca status "player Bedrock" (kalau tidak, `isFloodgatePlayer()` akan selalu `false`).
-- Plugin ini dipasang di **server lobby**, bukan di BungeeCord, karena AuthMe jalan di server lobby.
-
-## Cara build
-
-1. Install Maven (Java 17+).
-2. Sesuaikan versi dependency di `pom.xml`:
-   - `paper-api` -> samakan dengan versi server kamu.
-   - `floodgate` -> cek versi terbaru di https://repo.opencollab.dev
-   - `AuthMeReloaded` -> cek versi terbaru di halaman GitHub AuthMe (via Jitpack)
-3. Jalankan:
-   ```bash
-   mvn clean package
-   ```
-4. Ambil file `target/authme-bedrock-bypass.jar`, taruh di folder `plugins/` server lobby.
-
-## Urutan plugin di server lobby
-
-Pastikan urutan load (biasanya otomatis berdasarkan `depend` di plugin.yml):
-1. floodgate
-2. AuthMe
-3. AuthMeBedrockBypass
-
-## Kalau mau player Bedrock benar-benar tanpa akun AuthMe sama sekali
-
-Alternatif lain (lebih "bersih" tapi lebih ribet): pakai event AuthMe sendiri
-(`AuthMePlayerLoginEvent`, dsb.) untuk **mengecualikan** UUID Floodgate dari
-proses cek autentikasi, alih-alih auto-register. Tapi pendekatan force-login +
-auto-register di atas paling gampang dan aman untuk kebanyakan server survival/lobby.
-
-## Troubleshooting
-
-- **`isFloodgatePlayer()` selalu false** -> Floodgate belum terpasang di server lobby ini,
-  atau player masuk lewat Geyser versi lama yang belum inject data Floodgate ke UUID.
-- **Player Bedrock malah stuck / tidak masuk world** -> cek plugin lain yang juga
-  nge-listen `PlayerJoinEvent` dengan priority tinggi dan mem-block gerak sebelum login;
-  turunkan priority AuthMeBedrockBypass jadi `LOWEST` (sudah default di kode ini).
+## Cara pakai singkat
+1. Pastikan plugin **Floodgate** dan **Emotecraft-Bukkit** sudah terpasang.
+2. Sesuaikan poin-poin checklist di atas.
+3. `./gradlew build`, lalu taruh jar hasilnya di folder `plugins/`.
+4. Edit `config.yml` sesuai daftar emote-mu, restart server.

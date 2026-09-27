@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group = 'id.emotebridge'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url = 'https://repo.opencollective.com/repository/maven-public/' } // contoh, cek repo resmi Geyser/Floodgate terbaru
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
+    // Ganti dengan koordinat Maven Floodgate API versi terbaru sesuai
+    // https://github.com/GeyserMC/Floodgate (cek README repo untuk repo & versi resmi)
+    compileOnly 'org.geysermc.floodgate:api:2.2.2-SNAPSHOT'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

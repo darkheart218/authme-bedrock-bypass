@@ -1,8 +1,18 @@
-name: AuthMeBedrockBypass
-version: '1.0.0'
-main: com.example.authmebedrockbypass.AuthMeBedrockBypass
+name: EmoteBridge
+version: 1.0.0
+main: id.emotebridge.EmoteBridgePlugin
 api-version: '1.20'
-author: YourName
-description: Auto-login player Bedrock (Geyser/Floodgate) sehingga tidak perlu login AuthMe manual
-
-depend: [AuthMe, floodgate]
+author: Kamu
+description: >
+  Jembatan sederhana antara plugin Emotecraft-Bukkit dan pemain Bedrock (via Geyser/Floodgate).
+  - Saat pemain Java menjalankan /emotes play <nama>, pemain Bedrock di sekitarnya
+    mendapat indikator (particle + suara + actionbar) karena mereka tidak bisa
+    melihat animasi mod Emotecraft secara asli.
+  - Pemain Bedrock diberi command /emotewheel yang membuka form berisi daftar
+    emote, tinggal klik untuk menjalankan /emotes play <nama> versi mereka sendiri.
+depend: [Floodgate]
+softdepend: [Emotecraft]
+commands:
+  emotewheel:
+    description: Buka menu emote untuk pemain Bedrock
+    usage: /emotewheel
